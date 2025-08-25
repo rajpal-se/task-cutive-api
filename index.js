@@ -1,5 +1,6 @@
 const express = require("express")
 const dotenv = require("dotenv")
+const path = require("path")
 const connectDB = require("./db/connectDB")
 const usersRouter = require("./routes/Users")
 const tasksRouter = require("./routes/Tasks")
@@ -8,7 +9,12 @@ const DefaultError = require("./middlewares/DefaultError")
 
 const app = express()
 
-const envConfig = dotenv.config()
+const NODE_ENV = process.argv[2] || "development";
+
+const envConfig = dotenv.config({
+	path: path.resolve(__dirname, `.env${NODE_ENV === "production" ? ".production" : ""}`)	
+})
+
 let env = {}
 if(envConfig.error) console.log(envConfig)
 else env = envConfig.parsed
@@ -41,7 +47,7 @@ app.use(DefaultError)
 
 // Server
 const start = async () => {
-	const port = process.env.PORT || 5011
+	const port = process.env.PORT || 5002
 	try {
 		await connectDB(process.env.MONGO_URI)
 		app.listen(port, () =>

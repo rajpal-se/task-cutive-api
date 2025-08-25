@@ -8,3 +8,8 @@ local*
 .dockerignore
 Dockerfile*
 docker-compose*.yml
+
+
+.env.gh
+.secrets
+.variables
