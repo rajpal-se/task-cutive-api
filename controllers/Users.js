@@ -363,12 +363,13 @@ const verifyEmail = async (req, res) => {
 				else {
 					if(user.verified){
 						const emailStatus = await _sendOTPEmail(user.email, 1, otp => _getOTPEmailTemplate(otp, 1) )
+						// console.log(111111,emailStatus)
 						if(emailStatus.status){
 							let text = `OTP has been sent to <${user.email}>. This OTP is Valid only for 60seconds.`
 							res.status(200).send(ret({_id: user._id}, text))
 						}
 						else{
-							res.status(400).send(err("Failed to send OTP [9]."))
+							res.status(400).send(err("Failed to send OTP [11]."))
 						}
 					}
 					else{
