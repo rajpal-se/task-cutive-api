@@ -1,21 +1,8 @@
 import express from 'express';
+import { createUser, deleteUser, getUser, updateUser } from '../controllers/users.controller.js';
 
 const usersRouter = express.Router();
 
-usersRouter
-    .route('/')
-    .get((req, res) => {
-        res.send('Get user profile');
-    })
-    .patch((req, res) => {
-        res.send('Update user profile');
-    })
-    .delete((req, res) => {
-        res.send('Delete user profile');
-    });
-
-usersRouter.route('/').post((req, res) => {
-    res.send('Create a new user');
-});
+usersRouter.route('/').get(getUser).post(createUser).patch(updateUser).delete(deleteUser);
 
 export default usersRouter;

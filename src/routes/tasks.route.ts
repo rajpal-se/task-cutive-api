@@ -1,23 +1,17 @@
 import express from 'express';
+import { createTask, deleteTask, getAllTasks, getTaskById, updateTask } from '../controllers/tasks.controller.js';
 
 const tasksRouter = express.Router();
 
 tasksRouter
     .route('/')
-    .get((req, res) => {
-        res.send('Get all tasks');
-    })
-    .post((req, res) => {
-        res.send('Create a new task');
-    });
+    .get(getAllTasks)
+    .post(createTask);
 
 tasksRouter
     .route('/:taskId')
-    .patch((req, res) => {
-        res.send(`Update task with ID ${req.params.taskId}`);
-    })
-    .delete((req, res) => {
-        res.send(`Delete task with ID ${req.params.taskId}`);
-    });
+    .get(getTaskById)
+    .patch(updateTask)
+    .delete(deleteTask);
 
 export default tasksRouter;
