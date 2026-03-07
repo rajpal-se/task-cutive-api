@@ -1,7 +1,13 @@
-import express from 'express';
-import { login, logout, refreshAccessToken, resetPassword, verifyOTP } from '../controllers/auth.controller.js';
+import { Router } from 'express';
+import {
+    login,
+    logout,
+    refreshAccessToken,
+    resetPassword,
+    verifyOTP,
+} from '../controllers/auth.controller.js';
 
-const authRouter = express.Router();
+const authRouter = Router();
 
 authRouter
     .post('/login', login)
