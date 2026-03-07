@@ -22,7 +22,7 @@ async function runApp() {
     }
 
     try {
-        await connectDB(process.env.MONGO_URI!);
+        await connectDB(process.env.MONGO_URI!, process.env.DB_NAME!);
         console.log('Connected to MongoDB');
     } catch (error) {
         console.error('Failed to connect to MongoDB:', error);
