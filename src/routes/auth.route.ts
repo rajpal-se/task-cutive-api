@@ -19,8 +19,8 @@ authRouter
     .post('/verify-otp', (req, res) => {
         res.send('Verify user email');
     })
-    .post('/refresh-token', (req, res) => {
-        res.send('Refresh user token');
+    .post('/refresh-access-token', (req, res) => {
+        res.send("Refresh user's Access token");
     });
 
 export default authRouter;

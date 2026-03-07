@@ -7,8 +7,10 @@ export default defineConfig([
     tseslint.configs.recommended,
     {
         rules: {
-            'no-unused-vars': 'warn',
-            'no-undef': 'warn',
+            // 'no-unused-vars': 'warn',
+            // 'no-undef': 'warn',
+            '@typescript-eslint/no-explicit-any': 'off',
+            '@typescript-eslint/no-empty-object-type': 'off',
         },
     },
 ]);
