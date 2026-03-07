@@ -28,7 +28,13 @@ export async function createUser(req: CreateUserRequest, res: Response): Promise
 }
 
 export async function getUser(req: GetUserRequest, res: Response): Promise<void> {
-    res.send('Get user profile');
+    try {
+        const result = await UsersSchema.findOne({});
+        const user = result?.getData();
+        success(res, user);
+    } catch (e: any) {
+        error(res, e?.message || 'Failed to fetch user', 500);
+    }
 }
 
 export async function updateUser(req: UpdateUserRequest, res: Response): Promise<void> {
