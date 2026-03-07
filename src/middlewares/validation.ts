@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
-import { createUserRequestSchema } from '../validators/users.js';
+import { createUserRequestSchema, getUserRequestSchema } from '../validators/users.js';
 import { error } from './../utils/app.js';
 
 const userConfig = {
     POST: [
         [/\/users\/?$/, createUserRequestSchema, ['firstName', 'lastName', 'email', 'password']],
     ],
+    GET: [[/\/users\/?$/, getUserRequestSchema]],
 };
 
 async function findError(req: Request, route: string, config: any) {

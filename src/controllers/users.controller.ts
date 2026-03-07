@@ -29,7 +29,8 @@ export async function createUser(req: CreateUserRequest, res: Response): Promise
 
 export async function getUser(req: GetUserRequest, res: Response): Promise<void> {
     try {
-        const result = await UsersSchema.findOne({});
+        const id = req.query.id;
+        const result = await UsersSchema.findById(id);
         const user = result?.getData();
         success(res, user);
     } catch (e: any) {

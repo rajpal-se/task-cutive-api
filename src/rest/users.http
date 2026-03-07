@@ -10,4 +10,4 @@ Content-Type: application/json
 
 ###
 
-GET {{ baseUrl }}/users
+GET {{ baseUrl }}/users?id=69ac2900a1d5ef133b45834a

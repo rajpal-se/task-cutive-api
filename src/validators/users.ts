@@ -25,3 +25,13 @@ export const createUserRequestSchema = yup
             .required(),
     })
     .required();
+
+export const getUserRequestSchema = yup
+    .object({
+        query: yup
+            .object({
+                id: yup.string().trim().required('User ID is required'),
+            })
+            .required(),
+    })
+    .required();
