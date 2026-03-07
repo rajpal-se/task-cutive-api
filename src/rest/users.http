@@ -1,4 +1,4 @@
-@userId=69ac2900a1d5ef133b45834a
+@userId=69ac363ddc3346fb89248943
 
 ###
 
@@ -24,3 +24,8 @@ Content-Type: application/json
     "firstName": "John2",
     "lastName": "Cena2"
 }
+
+
+###
+
+DELETE {{ baseUrl }}/users?id={{ userId }}

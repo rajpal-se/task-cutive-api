@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import {
     createUserRequestSchema,
+    deleteUserRequestSchema,
     getUserRequestSchema,
     updateUserRequestSchema,
 } from '../validators/users.js';
@@ -12,6 +13,7 @@ const userConfig = {
     ],
     GET: [[/\/users\/?$/, getUserRequestSchema]],
     PATCH: [[/\/users\/?$/, updateUserRequestSchema]],
+    DELETE: [[/\/users\/?$/, deleteUserRequestSchema]],
 };
 
 async function findError(req: Request, route: string, config: any) {

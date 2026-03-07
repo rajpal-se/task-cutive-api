@@ -55,7 +55,15 @@ export async function updateUser(req: UpdateUserRequest, res: Response): Promise
 }
 
 export async function deleteUser(req: DeleteUserRequest, res: Response): Promise<void> {
-    res.send('Delete user profile');
+    try {
+        const { id } = req.query;
+        const result = await UsersSchema.findOneAndDelete({ _id: id });
+        const user = result?.getData();
+        const message = user ? 'User deleted successfully!' : 'User not found.';
+        success(res, { data: user, message });
+    } catch (e: any) {
+        error(res, e?.message || 'Failed to delete user', 500);
+    }
 }
 
 export async function getAllUsers(req: GetAllUsersRequest, res: Response): Promise<void> {

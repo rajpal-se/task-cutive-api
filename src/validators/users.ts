@@ -56,3 +56,13 @@ export const updateUserRequestSchema = yup
             .required(),
     })
     .required();
+
+export const deleteUserRequestSchema = yup
+    .object({
+        query: yup
+            .object({
+                id: yup.string().trim().required('User ID is required'),
+            })
+            .required(),
+    })
+    .required();
