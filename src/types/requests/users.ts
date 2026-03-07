@@ -2,10 +2,10 @@ import { Request } from 'express';
 
 export interface CreateUserRequest extends Request {
     body: {
-        email: string;
-        password: string;
         firstName: string;
         lastName: string;
+        email: string;
+        password: string;
     };
 }
 
