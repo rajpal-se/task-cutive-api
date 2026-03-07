@@ -1,16 +1,37 @@
 import mongoose from 'mongoose';
-import TaskSchema from './tasks.schema.js';
+import TaskSchema, { Task } from './tasks.schema.js';
+import { hashSync } from 'bcrypt';
+import _ from 'lodash';
 
-const UsersSchema = new mongoose.Schema(
+export interface User extends mongoose.Document {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    role: 'user' | 'admin';
+    verified: boolean;
+    verifyMeta: {
+        otp: string;
+        issued_at: Date;
+        used_for: '' | 'verify-email' | 'reset-password';
+    };
+    tasks: Task[];
+    created_at?: Date;
+    updated_at?: Date;
+
+    getData: () => Omit<User, 'password' | 'verifyMeta' | 'tasks'>;
+}
+
+const UsersSchema: mongoose.Schema<User> = new mongoose.Schema<User>(
     {
-        fname: {
+        firstName: {
             type: String,
             required: [true, '[First Name] must provide'],
             trim: true,
             maxlength: [20, '[First Name] can not be more than 20 characters'],
         },
 
-        lname: {
+        lastName: {
             type: String,
             required: [true, '[Last Name] must provide'],
             trim: true,
@@ -27,7 +48,7 @@ const UsersSchema = new mongoose.Schema(
             index: true,
         },
 
-        pass: {
+        password: {
             type: String,
             required: [true, '[Password] must provide'],
             trim: true,
@@ -48,7 +69,7 @@ const UsersSchema = new mongoose.Schema(
         verifyMeta: {
             otp: {
                 type: String,
-                default: '000000',
+                default: '',
             },
 
             issued_at: {
@@ -73,4 +94,36 @@ const UsersSchema = new mongoose.Schema(
     },
 );
 
-export default mongoose.model('Users', UsersSchema);
+UsersSchema.pre('save', async function () {
+    // Only hash the password if it's new or modified
+    if (this.isModified('firstName')) {
+        this.firstName = _.startCase(this.firstName?.toLowerCase() || '');
+    }
+    if (this.isModified('lastName')) {
+        this.lastName = _.startCase(this.lastName?.toLowerCase() || '');
+    }
+    if (this.isModified('email')) {
+        this.email = this.email?.toLowerCase() || '';
+    }
+    if (this.isModified('password')) {
+        const password = hashSync(this.password, 11);
+        this.password = password;
+    }
+
+    if (!this.isNew) {
+        // Prevent email update
+        this.email = this.get('email'); // reset to original
+        this.created_at = this.get('created_at');
+        this._id = this.get('_id');
+    }
+});
+
+UsersSchema.methods.getData = function () {
+    const obj = this.toObject();
+    delete obj.password;
+    delete obj.verifyMeta;
+    delete obj.tasks;
+    return obj;
+};
+
+export default mongoose.model<User>('Users', UsersSchema);

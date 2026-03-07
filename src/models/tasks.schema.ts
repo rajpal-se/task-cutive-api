@@ -1,6 +1,17 @@
 import mongoose from 'mongoose';
 
-const TaskSchema = new mongoose.Schema(
+export interface Task extends mongoose.Document {
+    title: string;
+    description: string;
+    is_high_priority: boolean;
+    is_completed: boolean;
+    completed_at: Date | null;
+    due_datetime: Date;
+    created_at?: Date;
+    updated_at?: Date;
+}
+
+const TaskSchema: mongoose.Schema<Task> = new mongoose.Schema<Task>(
     {
         title: {
             type: String,

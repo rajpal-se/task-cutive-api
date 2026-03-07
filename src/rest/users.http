@@ -1,0 +1,9 @@
+POST {{ baseUrl }}/users
+Content-Type: application/json
+
+{
+    "firstName": "John",
+    "lastName": "Cena",
+    "email": "john.cena@example.com",
+    "password": "Password@123"
+}
