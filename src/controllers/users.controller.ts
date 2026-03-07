@@ -67,5 +67,11 @@ export async function deleteUser(req: DeleteUserRequest, res: Response): Promise
 }
 
 export async function getAllUsers(req: GetAllUsersRequest, res: Response): Promise<void> {
-    res.send('Get All users');
+    try {
+        const result = await UsersSchema.find({}).sort({ created_at: -1 });
+        const users = result.map((user) => user.getData());
+        success(res, users);
+    } catch (e: any) {
+        error(res, e?.message || 'Failed to fetch user', 500);
+    }
 }

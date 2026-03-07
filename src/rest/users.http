@@ -29,3 +29,7 @@ Content-Type: application/json
 ###
 
 DELETE {{ baseUrl }}/users?id={{ userId }}
+
+###
+
+GET {{ baseUrl }}/users/all
