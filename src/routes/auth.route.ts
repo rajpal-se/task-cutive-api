@@ -2,10 +2,6 @@ import express from 'express';
 
 const authRouter = express.Router();
 
-authRouter.post('/register', (req, res) => {
-    res.send('Register a new user');
-});
-
 authRouter
     .post('/login', (req, res) => {
         res.send('User login');

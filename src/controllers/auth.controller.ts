@@ -1,9 +1,5 @@
 import { Response } from 'express';
-import { LoginUserRequest, RegisterUserRequest, ResetPasswordRequest } from '../types/index.js';
-
-export async function register(req: RegisterUserRequest, res: Response): Promise<void> {
-    res.send('Register a new user');
-}
+import { LoginUserRequest, ResetPasswordRequest } from '../types/index.js';
 
 export async function login(req: LoginUserRequest, res: Response): Promise<void> {
     res.send('User login');

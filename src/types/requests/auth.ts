@@ -1,18 +1,9 @@
 import { Request } from 'express';
 
-export interface RegisterUserRequest extends Request {
-    body: {
-        email: string;
-        password: string;
-        name: string;
-    };
-}
-
 export interface LoginUserRequest extends Request {
     body: {
         email: string;
         password: string;
-        name: string;
     };
 }
 
