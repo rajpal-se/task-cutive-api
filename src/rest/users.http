@@ -1,3 +1,7 @@
+@userId=69ac2900a1d5ef133b45834a
+
+###
+
 POST {{ baseUrl }}/users
 Content-Type: application/json
 
@@ -10,4 +14,13 @@ Content-Type: application/json
 
 ###
 
-GET {{ baseUrl }}/users?id=69ac2900a1d5ef133b45834a
+GET {{ baseUrl }}/users?id={{ userId }}
+
+###
+PATCH {{ baseUrl }}/users?id={{ userId }}
+Content-Type: application/json
+
+{
+    "firstName": "John2",
+    "lastName": "Cena2"
+}

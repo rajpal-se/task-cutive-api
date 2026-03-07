@@ -1,5 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { createUserRequestSchema, getUserRequestSchema } from '../validators/users.js';
+import {
+    createUserRequestSchema,
+    getUserRequestSchema,
+    updateUserRequestSchema,
+} from '../validators/users.js';
 import { error } from './../utils/app.js';
 
 const userConfig = {
@@ -7,6 +11,7 @@ const userConfig = {
         [/\/users\/?$/, createUserRequestSchema, ['firstName', 'lastName', 'email', 'password']],
     ],
     GET: [[/\/users\/?$/, getUserRequestSchema]],
+    PATCH: [[/\/users\/?$/, updateUserRequestSchema]],
 };
 
 async function findError(req: Request, route: string, config: any) {

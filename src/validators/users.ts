@@ -35,3 +35,24 @@ export const getUserRequestSchema = yup
             .required(),
     })
     .required();
+
+export const updateUserRequestSchema = yup
+    .object({
+        body: yup
+            .object({
+                firstName: yup.string().trim(),
+                lastName: yup.string().trim(),
+            })
+            .test('at-least-one', 'At least one of firstName or lastName is required', (value) =>
+                Boolean(value?.firstName || value?.lastName),
+            )
+            .strict(true)
+            .noUnknown(true, 'Only firstName and lastName are allowed')
+            .required(),
+        query: yup
+            .object({
+                id: yup.string().trim().required('User ID is required'),
+            })
+            .required(),
+    })
+    .required();

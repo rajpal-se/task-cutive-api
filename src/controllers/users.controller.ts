@@ -39,7 +39,19 @@ export async function getUser(req: GetUserRequest, res: Response): Promise<void>
 }
 
 export async function updateUser(req: UpdateUserRequest, res: Response): Promise<void> {
-    res.send('Update user profile');
+    try {
+        const { id } = req.query;
+        const { firstName, lastName } = req.body;
+        await UsersSchema.updateOne(
+            { _id: id },
+            { ...(firstName && { firstName }), ...(lastName && { lastName }) },
+        );
+
+        const user = (await UsersSchema.findById(id))?.getData();
+        success(res, user);
+    } catch (e: any) {
+        error(res, e?.message || 'Failed to update user', 500);
+    }
 }
 
 export async function deleteUser(req: DeleteUserRequest, res: Response): Promise<void> {
