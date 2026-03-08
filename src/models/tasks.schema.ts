@@ -47,7 +47,12 @@ export const TaskSchema: mongoose.Schema<Task> = new mongoose.Schema<Task>(
 
         completed_at: {
             type: Date,
-            default: null,
+            default: Date.now,
+        },
+
+        updated_at: {
+            type: Date,
+            default: Date.now,
         },
 
         due_datetime: {

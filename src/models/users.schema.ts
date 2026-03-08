@@ -81,6 +81,16 @@ const UsersSchema: mongoose.Schema<User> = new mongoose.Schema<User>(
                 default: '',
             },
         },
+
+        created_at: {
+            type: Date,
+            default: Date.now,
+        },
+
+        updated_at: {
+            type: Date,
+            default: Date.now,
+        },
     },
     {
         timestamps: {
