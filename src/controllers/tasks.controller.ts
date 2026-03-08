@@ -4,6 +4,7 @@ import {
     UpdateTaskRequest,
     DeleteTaskRequest,
     GetTaskByIdRequest,
+    GetAllTasksRequest,
 } from '../types/index.js';
 import { error, success } from '../utils/app.js';
 import usersSchema from '../models/users.schema.js';
@@ -22,15 +23,41 @@ export async function ensureUserExists(userId: string, res: Response): Promise<b
     return true;
 }
 
-export async function getAllTasks(req: CreateTaskRequest, res: Response): Promise<void> {
+export async function getAllTasks(req: GetAllTasksRequest, res: Response): Promise<void> {
     try {
-        const { userId } = req.query;
+        const { userId, filter } = req.query;
 
         if (!(await ensureUserExists(userId!, res))) return;
 
-        const query: any = { userId };
+        const now = new Date();
+        const query: Record<string, unknown> = { userId };
+        const sort: Record<string, 1 | -1> = { created_at: -1 };
 
-        const result = await TasksSchema.find(query);
+        switch (filter) {
+            case 'done':
+                query.is_completed = true;
+                break;
+            case 'pending':
+                query.is_completed = false;
+                break;
+            case 'expired':
+                query.is_completed = false;
+                query.due_datetime = { $lt: now };
+                sort.due_datetime = 1;
+                delete sort.created_at;
+                break;
+            case 'upcoming':
+                query.is_completed = false;
+                query.due_datetime = { $gte: now };
+                sort.due_datetime = 1;
+                delete sort.created_at;
+                break;
+            case 'recent':
+            default:
+                break;
+        }
+
+        const result = await TasksSchema.find(query).sort(sort);
         const tasks = result?.map((v) => v?.getData());
         const data = {
             tasks,
