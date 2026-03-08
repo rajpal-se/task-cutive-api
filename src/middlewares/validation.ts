@@ -26,7 +26,7 @@ const userConfig = {
 const taskConfig = {
     POST: [[/\/tasks\/?$/, createTaskRequestSchema]],
     GET: [
-        [/\/tasks\/?$/, getTaskByIdRequestSchema],
+        [/\/tasks\/.+\/?$/, getTaskByIdRequestSchema],
         [/\/tasks\/all\/?$/, getAllTasksRequestSchema],
     ],
     PATCH: [[/\/tasks\/.+\/?$/, updateTaskRequestSchema]],

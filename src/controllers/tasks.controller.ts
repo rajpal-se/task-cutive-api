@@ -27,7 +27,23 @@ export async function getAllTasks(req: CreateTaskRequest, res: Response): Promis
 }
 
 export async function getTaskById(req: GetTaskByIdRequest, res: Response): Promise<void> {
-    res.send('Get task by ID');
+    try {
+        const { taskId } = req.params;
+        const { userId } = req.query;
+
+        if (!(await ensureUserExists(userId!, res))) return;
+
+        const result = await TasksSchema.findOne({ _id: taskId, userId });
+        const task = result?.getData();
+        if (!task) {
+            error(res, 'Task not found', 404);
+            return;
+        }
+
+        success(res, task);
+    } catch (e: any) {
+        error(res, e?.message || 'Failed to fetch task', 500);
+    }
 }
 
 export async function createTask(req: CreateTaskRequest, res: Response): Promise<void> {

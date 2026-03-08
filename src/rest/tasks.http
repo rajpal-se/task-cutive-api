@@ -1,5 +1,9 @@
 @userId=69ac3614119dbcc35e58d5c2
-@taskId=69ad5d3cc24b966f497f495d
+@taskId=69ad56f1e6f19f1fa8020b2c
+
+###
+
+GET {{ baseUrl }}/tasks/{{ taskId }}?userId={{ userId }}
 
 ###
 
