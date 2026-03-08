@@ -1,5 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import {
+    createTaskRequestSchema,
+    deleteTaskRequestSchema,
+    getAllTasksRequestSchema,
+    getTaskByIdRequestSchema,
+    updateTaskRequestSchema,
+} from '../validators/tasks.js';
+import {
     createUserRequestSchema,
     deleteUserRequestSchema,
     getUserRequestSchema,
@@ -14,6 +21,16 @@ const userConfig = {
     GET: [[/\/users\/?$/, getUserRequestSchema]],
     PATCH: [[/\/users\/?$/, updateUserRequestSchema]],
     DELETE: [[/\/users\/?$/, deleteUserRequestSchema]],
+};
+
+const taskConfig = {
+    POST: [[/\/tasks\/?$/, createTaskRequestSchema]],
+    GET: [
+        [/\/tasks\/[^/]+\/?$/, getTaskByIdRequestSchema],
+        [/\/tasks\/all\/?$/, getAllTasksRequestSchema],
+    ],
+    PATCH: [[/\/tasks\/[^/]+\/?$/, updateTaskRequestSchema]],
+    DELETE: [[/\/tasks\/[^/]+\/?$/, deleteTaskRequestSchema]],
 };
 
 async function findError(req: Request, route: string, config: any) {
@@ -46,7 +63,9 @@ export async function validateRequestMiddleware(req: Request, res: Response, nex
         const path = req.path;
         const errorMessage = path.startsWith('/users')
             ? await findError(req, '/users', userConfig)
-            : null;
+            : path.startsWith('/tasks')
+              ? await findError(req, '/tasks', taskConfig)
+              : null;
         if (errorMessage) return error(res, errorMessage, 400);
         next();
     } catch (err: any) {
