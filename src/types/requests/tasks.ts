@@ -34,9 +34,9 @@ export interface UpdateTaskRequest extends Request {
     body: {
         title?: string;
         description?: string;
-        isHighPriority?: boolean;
-        isCompleted?: boolean;
-        dueDatetime?: string | Date;
+        is_high_priority?: boolean;
+        is_completed?: boolean;
+        due_datetime?: string | Date;
     };
     params: {
         taskId: string;

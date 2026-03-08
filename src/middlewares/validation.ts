@@ -26,15 +26,16 @@ const userConfig = {
 const taskConfig = {
     POST: [[/\/tasks\/?$/, createTaskRequestSchema]],
     GET: [
-        [/\/tasks\/[^/]+\/?$/, getTaskByIdRequestSchema],
+        [/\/tasks\/?$/, getTaskByIdRequestSchema],
         [/\/tasks\/all\/?$/, getAllTasksRequestSchema],
     ],
-    PATCH: [[/\/tasks\/[^/]+\/?$/, updateTaskRequestSchema]],
-    DELETE: [[/\/tasks\/[^/]+\/?$/, deleteTaskRequestSchema]],
+    PATCH: [[/\/tasks\/.+\/?$/, updateTaskRequestSchema]],
+    DELETE: [[/\/tasks\/.+\/?$/, deleteTaskRequestSchema]],
 };
 
 async function findError(req: Request, route: string, config: any) {
     const path = req.path;
+    // console.log(req);
     if (path.startsWith(route)) {
         const matchedConfig = config[req.method as keyof typeof userConfig]?.find((item: any) => {
             return (item[0] as RegExp).test(path);

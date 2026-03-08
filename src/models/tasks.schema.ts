@@ -10,6 +10,8 @@ export interface Task extends mongoose.Document {
     due_datetime: Date;
     created_at?: Date;
     updated_at?: Date;
+
+    getData: () => Omit<Task, 'userId'>;
 }
 
 export const TasksSchema: mongoose.Schema<Task> = new mongoose.Schema<Task>(
@@ -67,5 +69,30 @@ export const TasksSchema: mongoose.Schema<Task> = new mongoose.Schema<Task>(
         },
     },
 );
+
+TasksSchema.pre('save', async function () {
+    if (this.isModified('is_high_priority')) {
+        this.is_high_priority = Boolean(this.is_high_priority);
+    }
+    if (this.isModified('is_completed')) {
+        this.is_completed = Boolean(this.is_completed);
+    }
+    if (this.isModified('due_datetime')) {
+        this.due_datetime = new Date(this.due_datetime);
+    }
+
+    if (!this.isNew) {
+        this.created_at = this.get('created_at'); // reset to original
+        this.updated_at = new Date();
+        this._id = this.get('_id');
+        this.__v = this.get('__v') + 1;
+    }
+});
+
+TasksSchema.methods.getData = function () {
+    const obj = this.toObject();
+    delete obj.userId;
+    return obj;
+};
 
 export default mongoose.model<Task>('Tasks', TasksSchema);

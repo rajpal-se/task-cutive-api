@@ -55,7 +55,31 @@ export async function createTask(req: CreateTaskRequest, res: Response): Promise
 }
 
 export async function updateTask(req: UpdateTaskRequest, res: Response): Promise<void> {
-    res.send('Update task');
+    try {
+        const { taskId } = req.params;
+        const { userId } = req.query;
+        const { title, description, is_high_priority, is_completed, due_datetime } = req.body;
+
+        if (!(await ensureUserExists(userId!, res))) return;
+
+        const task = await TasksSchema.findOne({ _id: taskId, userId });
+        if (!task) {
+            error(res, 'Task not found', 404);
+            return;
+        }
+
+        if (title) task.title = title;
+        if (description) task.description = description;
+        if (is_high_priority !== undefined) task.is_high_priority = is_high_priority;
+        if (due_datetime) task.due_datetime = due_datetime as Date;
+        if (is_completed !== undefined) task.is_completed = is_completed;
+
+        const result = await task.save();
+
+        success(res, { data: result, message: 'Task updated successfully' });
+    } catch (e: any) {
+        error(res, e?.message || 'Failed to update task', 500);
+    }
 }
 
 export async function deleteTask(req: DeleteTaskRequest, res: Response): Promise<void> {

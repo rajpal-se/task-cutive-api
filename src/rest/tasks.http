@@ -1,4 +1,5 @@
 @userId=69ac3614119dbcc35e58d5c2
+@taskId=69ad5d3cc24b966f497f495d
 
 ###
 
@@ -7,4 +8,13 @@ Content-Type: application/json
 
 {
     "title": "Complete the project"
+}
+
+###
+
+PATCH {{ baseUrl }}/tasks/{{ taskId }}?userId={{ userId }}
+Content-Type: application/json
+
+{
+    "title": "Complete the project 3"
 }

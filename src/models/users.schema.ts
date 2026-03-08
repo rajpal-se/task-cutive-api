@@ -120,7 +120,9 @@ UsersSchema.pre('save', async function () {
         // Prevent email update
         this.email = this.get('email'); // reset to original
         this.created_at = this.get('created_at');
+        this.updated_at = new Date();
         this._id = this.get('_id');
+        this.__v = this.get('__v') + 1;
     }
 });
 
