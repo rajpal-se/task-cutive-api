@@ -26,6 +26,8 @@ export async function ensureUserExists(userId: string, res: Response): Promise<b
 export async function getAllTasks(req: GetAllTasksRequest, res: Response): Promise<void> {
     try {
         const { userId, filter } = req.query;
+        const page = Number(req.query.page);
+        const perPage = Math.min(Number(req.query.perPage) || 10, 100);
 
         if (!(await ensureUserExists(userId!, res))) return;
 
@@ -57,14 +59,25 @@ export async function getAllTasks(req: GetAllTasksRequest, res: Response): Promi
                 break;
         }
 
-        const result = await TasksSchema.find(query).sort(sort);
+        const total = await TasksSchema.countDocuments(query);
+        const result = await TasksSchema.find(query)
+            .sort(sort)
+            .skip((page - 1) * perPage)
+            .limit(perPage);
+
         const tasks = result?.map((v) => v?.getData());
         const data = {
             tasks,
+            pagination: {
+                total,
+                page,
+                perPage,
+                totalPages: Math.ceil(total / perPage) || 1,
+            },
         };
         success(res, data);
     } catch (e: any) {
-        error(res, e?.message || 'Failed to fetch task', 500);
+        error(res, e?.message || 'Failed to fetch all tasks', 500);
     }
 }
 
