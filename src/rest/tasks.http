@@ -1,0 +1,10 @@
+@userId=69ac3614119dbcc35e58d5c2
+
+###
+
+POST {{ baseUrl }}/tasks?userId={{ userId }}
+Content-Type: application/json
+
+{
+    "title": "Complete the project"
+}

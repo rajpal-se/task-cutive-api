@@ -12,7 +12,7 @@ export interface Task extends mongoose.Document {
     updated_at?: Date;
 }
 
-export const TaskSchema: mongoose.Schema<Task> = new mongoose.Schema<Task>(
+export const TasksSchema: mongoose.Schema<Task> = new mongoose.Schema<Task>(
     {
         userId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -30,9 +30,9 @@ export const TaskSchema: mongoose.Schema<Task> = new mongoose.Schema<Task>(
 
         description: {
             type: String,
-            required: [true, '[Description] must provide'],
             trim: true,
             maxlength: [2000, '[Description] too long'],
+            default: '',
         },
 
         is_high_priority: {
@@ -45,7 +45,7 @@ export const TaskSchema: mongoose.Schema<Task> = new mongoose.Schema<Task>(
             default: false,
         },
 
-        completed_at: {
+        created_at: {
             type: Date,
             default: Date.now,
         },
@@ -68,4 +68,4 @@ export const TaskSchema: mongoose.Schema<Task> = new mongoose.Schema<Task>(
     },
 );
 
-export default mongoose.model<Task>('Tasks', TaskSchema);
+export default mongoose.model<Task>('Tasks', TasksSchema);

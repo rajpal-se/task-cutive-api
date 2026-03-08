@@ -14,7 +14,7 @@ export interface CreateTaskRequest extends Request {
     body: {
         title: string;
         description: string;
-        isHighPriority?: boolean | string | number;
+        isHighPriority?: boolean;
         dueDatetime?: string | Date;
     };
     query: Partial<TaskOwnerQuery>;

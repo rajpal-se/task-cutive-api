@@ -7,8 +7,8 @@ export const createTaskRequestSchema = yup
             .object({
                 title: yup.string().trim().required('Title is required'),
                 description: yup.string().trim(),
-                isHighPriority: yup.boolean().optional(),
-                dueDatetime: DateField('Due datetime', false).optional(),
+                is_high_priority: yup.boolean().optional(),
+                due_datetime: DateField('Due datetime', false).optional(),
             })
             .required(),
 
@@ -62,17 +62,17 @@ export const updateTaskRequestSchema = yup
             .object({
                 title: yup.string().trim().optional(),
                 description: yup.string().trim().optional(),
-                isHighPriority: yup.boolean().optional(),
-                isCompleted: yup.boolean().optional(),
-                dueDatetime: DateField('Due datetime', false).optional(),
+                is_high_priority: yup.boolean().optional(),
+                is_completed: yup.boolean().optional(),
+                due_datetime: DateField('Due datetime', false).optional(),
             })
             .test('at-least-one-task-field', 'At least one task field is required', (value) =>
                 Boolean(
                     value?.title ||
                     value?.description ||
-                    value?.isHighPriority !== undefined ||
-                    value?.isCompleted !== undefined ||
-                    value?.dueDatetime,
+                    value?.is_high_priority !== undefined ||
+                    value?.is_completed !== undefined ||
+                    value?.due_datetime,
                 ),
             ),
         query: yup
