@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import { DateField, NumberField, ObjectIdField } from './app.js';
 
 export const createTaskRequestSchema = yup
     .object({
@@ -6,14 +7,14 @@ export const createTaskRequestSchema = yup
             .object({
                 title: yup.string().trim().required('Title is required'),
                 description: yup.string().trim(),
-                isHighPriority: yup.mixed<boolean>().optional(),
-                dueDatetime: yup.mixed<string | Date>().optional(),
+                isHighPriority: yup.boolean().optional(),
+                dueDatetime: DateField('Due datetime', false).optional(),
             })
             .required(),
 
         query: yup
             .object({
-                userId: yup.string().trim().required('userId query param is required'),
+                userId: ObjectIdField('User ID', true),
             })
             .required(),
     })
@@ -23,13 +24,13 @@ export const getAllTasksRequestSchema = yup
     .object({
         query: yup
             .object({
-                userId: yup.string().trim().required('userId query param is required'),
+                userId: ObjectIdField('User ID', true),
                 filter: yup
                     .string()
                     .oneOf(['done', 'pending', 'expired', 'recent', 'upcoming'])
                     .optional(),
-                page: yup.mixed<string | number>().optional(),
-                perPage: yup.mixed<string | number>().optional(),
+                page: NumberField('Page', false),
+                perPage: NumberField('Per Page', false),
             })
             .required(),
     })
@@ -39,12 +40,12 @@ export const getTaskByIdRequestSchema = yup
     .object({
         params: yup
             .object({
-                taskId: yup.string().trim().required('Task ID is required'),
+                taskId: ObjectIdField('Task ID', true),
             })
             .required(),
         query: yup
             .object({
-                userId: yup.string().trim().required('userId query param is required'),
+                userId: ObjectIdField('User ID', true),
             })
             .required(),
     })
@@ -54,16 +55,16 @@ export const updateTaskRequestSchema = yup
     .object({
         params: yup
             .object({
-                taskId: yup.string().trim().required('Task ID is required'),
+                taskId: ObjectIdField('Task ID', true),
             })
             .required(),
         body: yup
             .object({
                 title: yup.string().trim().optional(),
                 description: yup.string().trim().optional(),
-                isHighPriority: yup.mixed<boolean | string | number>().optional(),
-                isCompleted: yup.mixed<boolean | string | number>().optional(),
-                dueDatetime: yup.mixed<string | Date>().optional(),
+                isHighPriority: yup.boolean().optional(),
+                isCompleted: yup.boolean().optional(),
+                dueDatetime: DateField('Due datetime', false).optional(),
             })
             .test('at-least-one-task-field', 'At least one task field is required', (value) =>
                 Boolean(
@@ -76,7 +77,7 @@ export const updateTaskRequestSchema = yup
             ),
         query: yup
             .object({
-                userId: yup.string().trim().required('userId query param is required'),
+                userId: ObjectIdField('User ID', true),
             })
             .required(),
     })
@@ -86,12 +87,12 @@ export const deleteTaskRequestSchema = yup
     .object({
         params: yup
             .object({
-                taskId: yup.string().trim().required('Task ID is required'),
+                taskId: ObjectIdField('Task ID', true),
             })
             .required(),
         query: yup
             .object({
-                userId: yup.string().trim().required('userId query param is required'),
+                userId: ObjectIdField('User ID', true),
             })
             .required(),
     })
