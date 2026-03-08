@@ -4,7 +4,7 @@ export function success<T = any>(res: Response, data: T, statusCode = 200) {
     if ((data as any)?.data && (data as any)?.message) {
         return res.status(statusCode).json({
             success: true,
-            data,
+            data: (data as any).data,
             message: (data as any).message,
         });
     }

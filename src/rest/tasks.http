@@ -18,3 +18,9 @@ Content-Type: application/json
 {
     "title": "Complete the project 3"
 }
+
+###
+
+DELETE {{ baseUrl }}/tasks/{{ taskId }}?userId={{ userId }}
+
+

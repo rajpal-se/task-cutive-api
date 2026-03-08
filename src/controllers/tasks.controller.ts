@@ -83,5 +83,21 @@ export async function updateTask(req: UpdateTaskRequest, res: Response): Promise
 }
 
 export async function deleteTask(req: DeleteTaskRequest, res: Response): Promise<void> {
-    res.send('Delete task');
+    try {
+        const { taskId } = req.params;
+        const { userId } = req.query;
+
+        if (!(await ensureUserExists(userId!, res))) return;
+
+        const result = await TasksSchema.findOneAndDelete({ _id: taskId, userId });
+        const task = result?.getData();
+        if (!task) {
+            error(res, 'Task not found', 404);
+            return;
+        }
+
+        success(res, { data: task, message: 'Task deleted successfully!' });
+    } catch (e: any) {
+        error(res, e?.message || 'Failed to delete task', 500);
+    }
 }
