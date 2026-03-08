@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import TaskSchema, { Task } from './tasks.schema.js';
 import { hashSync } from 'bcrypt';
 import _ from 'lodash';
 
@@ -15,11 +14,10 @@ export interface User extends mongoose.Document {
         issued_at: Date;
         used_for: '' | 'verify-email' | 'reset-password';
     };
-    tasks: Task[];
     created_at?: Date;
     updated_at?: Date;
 
-    getData: () => Omit<User, 'password' | 'verifyMeta' | 'tasks'>;
+    getData: () => Omit<User, 'password' | 'verifyMeta'>;
 }
 
 const UsersSchema: mongoose.Schema<User> = new mongoose.Schema<User>(
@@ -83,8 +81,6 @@ const UsersSchema: mongoose.Schema<User> = new mongoose.Schema<User>(
                 default: '',
             },
         },
-
-        tasks: [TaskSchema],
     },
     {
         timestamps: {
@@ -122,7 +118,6 @@ UsersSchema.methods.getData = function () {
     const obj = this.toObject();
     delete obj.password;
     delete obj.verifyMeta;
-    delete obj.tasks;
     return obj;
 };
 

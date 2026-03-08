@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 export interface Task extends mongoose.Document {
+    userId: mongoose.Types.ObjectId;
     title: string;
     description: string;
     is_high_priority: boolean;
@@ -11,8 +12,15 @@ export interface Task extends mongoose.Document {
     updated_at?: Date;
 }
 
-const TaskSchema: mongoose.Schema<Task> = new mongoose.Schema<Task>(
+export const TaskSchema: mongoose.Schema<Task> = new mongoose.Schema<Task>(
     {
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Users',
+            required: [true, '[User ID] must provide'],
+            index: true,
+        },
+
         title: {
             type: String,
             required: [true, '[Title] must provide'],
@@ -55,4 +63,4 @@ const TaskSchema: mongoose.Schema<Task> = new mongoose.Schema<Task>(
     },
 );
 
-export default TaskSchema;
+export default mongoose.model<Task>('Tasks', TaskSchema);
