@@ -6,6 +6,17 @@ export const envSchema = yup
         PORT: yup.string().required('PORT is required').matches(/^\d+$/, 'PORT must be a number'),
         MONGO_URI: yup.string().required('MONGO_URI is required'),
         DB_NAME: yup.string().required('DB_NAME is required'),
+
+        OAUTH_CLIENT_ID: yup.string().required('OAUTH_CLIENT_ID is required'),
+        OAUTH_CLIENT_SECRET: yup.string().required('OAUTH_CLIENT_SECRET is required'),
+        OAUTH_REFRESH_TOKEN: yup.string().required('OAUTH_REFRESH_TOKEN is required'),
+        OAUTH_REDIRECT_URI: yup.string().required('OAUTH_REDIRECT_URI is required'),
+
+        APP_NAME: yup.string().required('APP_NAME is required'),
+        APP_EMAIL: yup
+            .string()
+            .email('APP_EMAIL must be a valid email')
+            .required('APP_EMAIL is required'),
     })
     .required();
 
