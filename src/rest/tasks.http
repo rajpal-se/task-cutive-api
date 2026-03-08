@@ -7,6 +7,10 @@ GET {{ baseUrl }}/tasks/{{ taskId }}?userId={{ userId }}
 
 ###
 
+GET {{ baseUrl }}/tasks?userId={{ userId }}
+
+###
+
 POST {{ baseUrl }}/tasks?userId={{ userId }}
 Content-Type: application/json
 

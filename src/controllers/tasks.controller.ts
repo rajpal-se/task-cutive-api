@@ -23,7 +23,22 @@ export async function ensureUserExists(userId: string, res: Response): Promise<b
 }
 
 export async function getAllTasks(req: CreateTaskRequest, res: Response): Promise<void> {
-    res.send('Get all tasks');
+    try {
+        const { userId } = req.query;
+
+        if (!(await ensureUserExists(userId!, res))) return;
+
+        const query: any = { userId };
+
+        const result = await TasksSchema.find(query);
+        const tasks = result?.map((v) => v?.getData());
+        const data = {
+            tasks,
+        };
+        success(res, data);
+    } catch (e: any) {
+        error(res, e?.message || 'Failed to fetch task', 500);
+    }
 }
 
 export async function getTaskById(req: GetTaskByIdRequest, res: Response): Promise<void> {
