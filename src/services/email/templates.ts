@@ -94,7 +94,7 @@ function buildTemplateContext(purpose: EmailOtpPurpose, input: BuildOtpTemplateI
         recipientName: input.recipientName || 'there',
         otp: input.otp,
         expiresInMinutes: input.expiresInMinutes,
-        replyTo: input.replyTo,
+        // replyTo: input.replyTo,
     };
 }
 
