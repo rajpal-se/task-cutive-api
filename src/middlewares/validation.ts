@@ -1,5 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import {
+    loginRequestSchema,
+    refreshAccessTokenRequestSchema,
+    resetPasswordRequestSchema,
+    verifyOtpRequestSchema,
+} from '../validators/auth.js';
+import {
     createTaskRequestSchema,
     deleteTaskRequestSchema,
     getAllTasksRequestSchema,
@@ -31,6 +37,15 @@ const taskConfig = {
     ],
     PATCH: [[/\/tasks\/.+\/?$/, updateTaskRequestSchema]],
     DELETE: [[/\/tasks\/.+\/?$/, deleteTaskRequestSchema]],
+};
+
+const authConfig = {
+    POST: [
+        [/\/auth\/login\/?$/, loginRequestSchema],
+        [/\/auth\/reset-password\/?$/, resetPasswordRequestSchema],
+        [/\/auth\/verify-otp\/?$/, verifyOtpRequestSchema],
+        [/\/auth\/refresh-access-token\/?$/, refreshAccessTokenRequestSchema],
+    ],
 };
 
 async function findError(req: Request, route: string, config: any) {
@@ -66,7 +81,9 @@ export async function validateRequestMiddleware(req: Request, res: Response, nex
             ? await findError(req, '/users', userConfig)
             : path.startsWith('/tasks')
               ? await findError(req, '/tasks', taskConfig)
-              : null;
+              : path.startsWith('/auth')
+                ? await findError(req, '/auth', authConfig)
+                : null;
         if (errorMessage) return error(res, errorMessage, 400);
         next();
     } catch (err: any) {
