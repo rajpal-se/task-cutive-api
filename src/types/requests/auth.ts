@@ -7,7 +7,11 @@ export interface LoginUserRequest extends Request {
     };
 }
 
-export interface LogoutUserRequest extends Request {}
+export interface LogoutUserRequest extends Request {
+    body: {
+        refreshToken?: string;
+    };
+}
 
 export interface ResetPasswordRequest extends Request {
     body: {
@@ -19,6 +23,8 @@ export interface VerifyOTPRequest extends Request {
     body: {
         email: string;
         otp: string;
+        purpose?: 'verify-email' | 'reset-password';
+        newPassword?: string;
     };
 }
 
