@@ -2,6 +2,7 @@
 @password=Password@123
 @newPassword=Password@456
 @otp=999999
+@accessToken=replace-with-access-token
 @refreshToken=replace-with-refresh-token
 
 ###
@@ -18,6 +19,7 @@ Content-Type: application/json
 
 POST {{ baseUrl }}/auth/logout
 Content-Type: application/json
+Authorization: Bearer {{ accessToken }}
 
 {
     "refreshToken": "{{ refreshToken }}"

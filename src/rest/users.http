@@ -1,4 +1,4 @@
-@userId=69ac363ddc3346fb89248943
+@accessToken=replace-with-access-token
 
 ###
 
@@ -14,11 +14,13 @@ Content-Type: application/json
 
 ###
 
-GET {{ baseUrl }}/users?id={{ userId }}
+GET {{ baseUrl }}/users
+Authorization: Bearer {{ accessToken }}
 
 ###
-PATCH {{ baseUrl }}/users?id={{ userId }}
+PATCH {{ baseUrl }}/users
 Content-Type: application/json
+Authorization: Bearer {{ accessToken }}
 
 {
     "firstName": "John2",
@@ -28,8 +30,10 @@ Content-Type: application/json
 
 ###
 
-DELETE {{ baseUrl }}/users?id={{ userId }}
+DELETE {{ baseUrl }}/users
+Authorization: Bearer {{ accessToken }}
 
 ###
 
 GET {{ baseUrl }}/users/all
+Authorization: Bearer {{ accessToken }}

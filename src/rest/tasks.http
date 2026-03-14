@@ -1,18 +1,21 @@
-@userId=69ac3614119dbcc35e58d5c2
 @taskId=69ad56f1e6f19f1fa8020b2c
+@accessToken=replace-with-access-token
 
 ###
 
-GET {{ baseUrl }}/tasks/{{ taskId }}?userId={{ userId }}
+GET {{ baseUrl }}/tasks/{{ taskId }}
+Authorization: Bearer {{ accessToken }}
 
 ###
 
-GET {{ baseUrl }}/tasks?userId={{ userId }}
+GET {{ baseUrl }}/tasks
+Authorization: Bearer {{ accessToken }}
 
 ###
 
-POST {{ baseUrl }}/tasks?userId={{ userId }}
+POST {{ baseUrl }}/tasks
 Content-Type: application/json
+Authorization: Bearer {{ accessToken }}
 
 {
     "title": "Complete the project"
@@ -20,8 +23,9 @@ Content-Type: application/json
 
 ###
 
-PATCH {{ baseUrl }}/tasks/{{ taskId }}?userId={{ userId }}
+PATCH {{ baseUrl }}/tasks/{{ taskId }}
 Content-Type: application/json
+Authorization: Bearer {{ accessToken }}
 
 {
     "title": "Complete the project 3"
@@ -29,6 +33,7 @@ Content-Type: application/json
 
 ###
 
-DELETE {{ baseUrl }}/tasks/{{ taskId }}?userId={{ userId }}
+DELETE {{ baseUrl }}/tasks/{{ taskId }}
+Authorization: Bearer {{ accessToken }}
 
 

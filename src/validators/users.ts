@@ -1,5 +1,4 @@
 import * as yup from 'yup';
-import { ObjectIdField } from './app.js';
 
 export const createUserRequestSchema = yup
     .object({
@@ -29,11 +28,7 @@ export const createUserRequestSchema = yup
 
 export const getUserRequestSchema = yup
     .object({
-        query: yup
-            .object({
-                id: ObjectIdField('User ID', true),
-            })
-            .required(),
+        query: yup.object({}).optional(),
     })
     .required();
 
@@ -50,20 +45,11 @@ export const updateUserRequestSchema = yup
             .strict(true)
             .noUnknown(true, 'Only firstName and lastName are allowed')
             .required(),
-        query: yup
-            .object({
-                id: ObjectIdField('User ID', true),
-            })
-            .required(),
     })
     .required();
 
 export const deleteUserRequestSchema = yup
     .object({
-        query: yup
-            .object({
-                id: ObjectIdField('User ID', true),
-            })
-            .required(),
+        query: yup.object({}).optional(),
     })
     .required();

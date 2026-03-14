@@ -11,12 +11,6 @@ export const createTaskRequestSchema = yup
                 due_datetime: DateField('Due datetime', false).optional(),
             })
             .required(),
-
-        query: yup
-            .object({
-                userId: ObjectIdField('User ID', true),
-            })
-            .required(),
     })
     .required();
 
@@ -24,7 +18,6 @@ export const getAllTasksRequestSchema = yup
     .object({
         query: yup
             .object({
-                userId: ObjectIdField('User ID', true),
                 filter: yup
                     .string()
                     .oneOf(['done', 'pending', 'expired', 'recent', 'upcoming'])
@@ -41,11 +34,6 @@ export const getTaskByIdRequestSchema = yup
         params: yup
             .object({
                 taskId: ObjectIdField('Task ID', true),
-            })
-            .required(),
-        query: yup
-            .object({
-                userId: ObjectIdField('User ID', true),
             })
             .required(),
     })
@@ -75,11 +63,6 @@ export const updateTaskRequestSchema = yup
                     value?.due_datetime,
                 ),
             ),
-        query: yup
-            .object({
-                userId: ObjectIdField('User ID', true),
-            })
-            .required(),
     })
     .required();
 
@@ -88,11 +71,6 @@ export const deleteTaskRequestSchema = yup
         params: yup
             .object({
                 taskId: ObjectIdField('Task ID', true),
-            })
-            .required(),
-        query: yup
-            .object({
-                userId: ObjectIdField('User ID', true),
             })
             .required(),
     })

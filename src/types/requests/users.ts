@@ -9,11 +9,7 @@ export interface CreateUserRequest extends Request {
     };
 }
 
-export interface GetUserRequest extends Request {
-    query: {
-        id: string;
-    };
-}
+export interface GetUserRequest extends Request {}
 
 export interface UpdateUserRequest extends Request {
     body: {
