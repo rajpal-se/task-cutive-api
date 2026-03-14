@@ -17,6 +17,8 @@ export const envSchema = yup
             .string()
             .email('APP_EMAIL must be a valid email')
             .required('APP_EMAIL is required'),
+        JWT_ACCESS_TOKEN_SECRET: yup.string().required('JWT_ACCESS_TOKEN_SECRET is required'),
+        JWT_REFRESH_TOKEN_SECRET: yup.string().required('JWT_REFRESH_TOKEN_SECRET is required'),
     })
     .required();
 
