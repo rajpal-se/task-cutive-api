@@ -1,0 +1,65 @@
+@email=john.cena@example.com
+@password=Password@123
+@newPassword=Password@456
+@otp=999999
+@refreshToken=replace-with-refresh-token
+
+###
+
+POST {{ baseUrl }}/auth/login
+Content-Type: application/json
+
+{
+    "email": "{{ email }}",
+    "password": "{{ password }}"
+}
+
+###
+
+POST {{ baseUrl }}/auth/logout
+Content-Type: application/json
+
+{
+    "refreshToken": "{{ refreshToken }}"
+}
+
+###
+
+POST {{ baseUrl }}/auth/reset-password
+Content-Type: application/json
+
+{
+    "email": "{{ email }}"
+}
+
+###
+
+POST {{ baseUrl }}/auth/verify-otp
+Content-Type: application/json
+
+{
+    "email": "{{ email }}",
+    "otp": "{{ otp }}",
+    "purpose": "verify-email"
+}
+
+###
+
+POST {{ baseUrl }}/auth/verify-otp
+Content-Type: application/json
+
+{
+    "email": "{{ email }}",
+    "otp": "{{ otp }}",
+    "purpose": "reset-password",
+    "newPassword": "{{ newPassword }}"
+}
+
+###
+
+POST {{ baseUrl }}/auth/refresh-access-token
+Content-Type: application/json
+
+{
+    "refreshToken": "{{ refreshToken }}"
+}

@@ -4,7 +4,16 @@ import indexRouter from './routes/index.route.js';
 import { connectDB } from './db/connect-db.js';
 import { envSchema } from './validators/app.js';
 
-configDotenv();
+const isProduction = process.env.NODE_ENV === 'production';
+if (isProduction) {
+    console.log('Running in production mode');
+} else {
+    console.log('Running in development mode');
+}
+
+configDotenv({
+    path: isProduction ? '.env.production' : '.env',
+});
 
 const app = express();
 const PORT = process.env.PORT || 5002;
@@ -16,8 +25,8 @@ app.use('/v1', indexRouter);
 async function runApp() {
     try {
         await envSchema.validate(process.env, { abortEarly: true });
-    } catch (error) {
-        console.error('Environment variables validation error:', error);
+    } catch (error: any) {
+        console.error('Environment variables validation error:', error?.message);
         process.exit(1);
     }
 

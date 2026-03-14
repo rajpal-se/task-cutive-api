@@ -137,6 +137,23 @@ export async function sendOtpEmail(
     user: InstanceType<typeof UsersSchema>,
     purpose: 'verify-email' | 'reset-password',
 ): Promise<void> {
+    if (process.env.NODE_ENV !== 'production') {
+        const devOtp = process.env.DEVELOPMENT_EMAIL_VERIFY_OTP?.trim();
+        if (!devOtp) {
+            throw new Error(
+                'DEVELOPMENT_EMAIL_VERIFY_OTP is required in non-production environments',
+            );
+        }
+
+        user.verifyMeta = {
+            otp: devOtp,
+            issued_at: new Date(),
+            used_for: purpose,
+        };
+        await user.save();
+        return;
+    }
+
     const emailService = EmailService.fromEnv();
     const otp = emailService.generateOtp();
 
