@@ -6,12 +6,13 @@ import {
     resetPassword,
     verifyOTP,
 } from '../controllers/auth.controller.js';
+import { requireAuth } from '../middlewares/auth.js';
 
 const authRouter = Router();
 
 authRouter
     .post('/login', login)
-    .post('/logout', logout)
+    .post('/logout', requireAuth(), logout)
     .post('/reset-password', resetPassword)
     .post('/verify-otp', verifyOTP)
     .post('/refresh-access-token', refreshAccessToken);

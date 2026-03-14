@@ -6,11 +6,17 @@ import {
     getUser,
     updateUser,
 } from '../controllers/users.controller.js';
+import { requireAdmin, requireAuth } from '../middlewares/auth.js';
 
 const usersRouter = Router();
 
-usersRouter.route('/').get(getUser).post(createUser).patch(updateUser).delete(deleteUser);
+usersRouter
+    .route('/')
+    .get(requireAuth(), getUser)
+    .post(createUser)
+    .patch(requireAuth(), updateUser)
+    .delete(requireAuth(), deleteUser);
 
-usersRouter.get('/all', getAllUsers);
+usersRouter.get('/all', requireAdmin, getAllUsers);
 
 export default usersRouter;

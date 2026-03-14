@@ -9,6 +9,17 @@ import {
 import { error, success } from '../utils/index.js';
 import UsersSchema from '../models/users.schema.js';
 
+function getAuthenticatedUserId(req: { auth?: { sub: string } }, res: Response): string | null {
+    const userId = req.auth?.sub;
+
+    if (!userId) {
+        error(res, 'Authenticated user context is required', 401);
+        return null;
+    }
+
+    return userId;
+}
+
 export async function createUser(req: CreateUserRequest, res: Response): Promise<void> {
     const { firstName, lastName, email, password } = req.body;
     const data = { firstName, lastName, email, password };
@@ -29,7 +40,9 @@ export async function createUser(req: CreateUserRequest, res: Response): Promise
 
 export async function getUser(req: GetUserRequest, res: Response): Promise<void> {
     try {
-        const id = req.query.id;
+        const id = getAuthenticatedUserId(req, res);
+        if (!id) return;
+
         const result = await UsersSchema.findById(id);
         const user = result?.getData();
         success(res, user);
@@ -40,7 +53,9 @@ export async function getUser(req: GetUserRequest, res: Response): Promise<void>
 
 export async function updateUser(req: UpdateUserRequest, res: Response): Promise<void> {
     try {
-        const { id } = req.query;
+        const id = getAuthenticatedUserId(req, res);
+        if (!id) return;
+
         const { firstName, lastName } = req.body;
         await UsersSchema.updateOne(
             { _id: id },
@@ -56,7 +71,9 @@ export async function updateUser(req: UpdateUserRequest, res: Response): Promise
 
 export async function deleteUser(req: DeleteUserRequest, res: Response): Promise<void> {
     try {
-        const { id } = req.query;
+        const id = getAuthenticatedUserId(req, res);
+        if (!id) return;
+
         const result = await UsersSchema.findOneAndDelete({ _id: id });
         const user = result?.getData();
         const message = user ? 'User deleted successfully!' : 'User not found.';

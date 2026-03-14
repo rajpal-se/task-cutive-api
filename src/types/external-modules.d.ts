@@ -1,3 +1,13 @@
+import type { AuthTokenPayload } from '../utils/auth.js';
+
+declare global {
+    namespace Express {
+        interface Request {
+            auth?: AuthTokenPayload;
+        }
+    }
+}
+
 declare module 'html-to-text' {
     export interface HtmlToTextOptions {
         wordwrap?: number | false;
@@ -27,3 +37,5 @@ declare module 'mjml' {
 
     export default function mjml2html(input: string, options?: MjmlOptions): MjmlResult;
 }
+
+export {};

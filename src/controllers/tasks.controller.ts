@@ -10,11 +10,18 @@ import { error, success } from '../utils/app.js';
 import usersSchema from '../models/users.schema.js';
 import TasksSchema from '../models/tasks.schema.js';
 
-export async function ensureUserExists(userId: string, res: Response): Promise<boolean> {
+function getAuthenticatedUserId(req: { auth?: { sub: string } }, res: Response): string | null {
+    const userId = req.auth?.sub;
+
     if (!userId) {
-        error(res, 'User ID is required', 400);
-        return false;
+        error(res, 'Authenticated user context is required', 401);
+        return null;
     }
+
+    return userId;
+}
+
+export async function ensureUserExists(userId: string, res: Response): Promise<boolean> {
     const userExists = await usersSchema.exists({ _id: userId });
     if (!userExists) {
         error(res, 'User not found', 404);
@@ -25,11 +32,14 @@ export async function ensureUserExists(userId: string, res: Response): Promise<b
 
 export async function getAllTasks(req: GetAllTasksRequest, res: Response): Promise<void> {
     try {
-        const { userId, filter } = req.query;
+        const userId = getAuthenticatedUserId(req, res);
+        if (!userId) return;
+
+        const { filter } = req.query;
         const page = Number(req.query.page);
         const perPage = Math.min(Number(req.query.perPage) || 10, 100);
 
-        if (!(await ensureUserExists(userId!, res))) return;
+        if (!(await ensureUserExists(userId, res))) return;
 
         const now = new Date();
         const query: Record<string, unknown> = { userId };
@@ -84,9 +94,10 @@ export async function getAllTasks(req: GetAllTasksRequest, res: Response): Promi
 export async function getTaskById(req: GetTaskByIdRequest, res: Response): Promise<void> {
     try {
         const { taskId } = req.params;
-        const { userId } = req.query;
+        const userId = getAuthenticatedUserId(req, res);
+        if (!userId) return;
 
-        if (!(await ensureUserExists(userId!, res))) return;
+        if (!(await ensureUserExists(userId, res))) return;
 
         const result = await TasksSchema.findOne({ _id: taskId, userId });
         const task = result?.getData();
@@ -103,10 +114,12 @@ export async function getTaskById(req: GetTaskByIdRequest, res: Response): Promi
 
 export async function createTask(req: CreateTaskRequest, res: Response): Promise<void> {
     try {
-        const { userId } = req.query;
+        const userId = getAuthenticatedUserId(req, res);
+        if (!userId) return;
+
         const { title, description, isHighPriority, dueDatetime } = req.body;
 
-        if (!(await ensureUserExists(userId!, res))) return;
+        if (!(await ensureUserExists(userId, res))) return;
 
         const dueDate = Date.parse(dueDatetime as string);
         const parsedPriority = isHighPriority || false;
@@ -128,10 +141,12 @@ export async function createTask(req: CreateTaskRequest, res: Response): Promise
 export async function updateTask(req: UpdateTaskRequest, res: Response): Promise<void> {
     try {
         const { taskId } = req.params;
-        const { userId } = req.query;
+        const userId = getAuthenticatedUserId(req, res);
+        if (!userId) return;
+
         const { title, description, is_high_priority, is_completed, due_datetime } = req.body;
 
-        if (!(await ensureUserExists(userId!, res))) return;
+        if (!(await ensureUserExists(userId, res))) return;
 
         const task = await TasksSchema.findOne({ _id: taskId, userId });
         if (!task) {
@@ -156,9 +171,10 @@ export async function updateTask(req: UpdateTaskRequest, res: Response): Promise
 export async function deleteTask(req: DeleteTaskRequest, res: Response): Promise<void> {
     try {
         const { taskId } = req.params;
-        const { userId } = req.query;
+        const userId = getAuthenticatedUserId(req, res);
+        if (!userId) return;
 
-        if (!(await ensureUserExists(userId!, res))) return;
+        if (!(await ensureUserExists(userId, res))) return;
 
         const result = await TasksSchema.findOneAndDelete({ _id: taskId, userId });
         const task = result?.getData();
