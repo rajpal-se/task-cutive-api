@@ -29,3 +29,13 @@ pids
 
 # Optional eslint cache
 .eslintcache
+
+
+.dockerignore
+Dockerfile*
+docker-compose*.yml
+
+
+.env.gh
+.secrets
+.variables
