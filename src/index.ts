@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 5002;
 
 app.use(
     cors({
-        origin: isProduction ? process.env.FRONTEND_ORIGIN : undefined,
+        origin: !isProduction ? process.env.FRONTEND_ORIGIN : undefined,
     }),
 );
 app.use(express.json());
