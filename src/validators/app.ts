@@ -6,6 +6,12 @@ export const envSchema = yup
         PORT: yup.string().required('PORT is required').matches(/^\d+$/, 'PORT must be a number'),
         MONGO_URI: yup.string().required('MONGO_URI is required'),
         DB_NAME: yup.string().required('DB_NAME is required'),
+        NODE_ENV: yup.string().required('NODE_ENV is required'),
+        FRONTEND_ORIGIN: yup.string().when('NODE_ENV', {
+            is: 'production',
+            then: (schema) => schema.notRequired(),
+            otherwise: (schema) => schema.required('FRONTEND_ORIGIN is required'),
+        }),
 
         OAUTH_CLIENT_ID: yup.string().required('OAUTH_CLIENT_ID is required'),
         OAUTH_CLIENT_SECRET: yup.string().required('OAUTH_CLIENT_SECRET is required'),
