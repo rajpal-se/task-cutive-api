@@ -9,6 +9,7 @@ import {
 } from '../types/index.js';
 import UsersSchema from '../models/users.schema.js';
 import {
+    AuthTokenPayload,
     clearVerifyMeta,
     createSignedToken,
     error,
@@ -18,7 +19,6 @@ import {
     normalizeEmail,
     sendOtpEmail,
     success,
-    verifySignedToken,
 } from '../utils/index.js';
 import { config } from '../config/index.js';
 
@@ -157,14 +157,7 @@ export async function refreshAccessToken(
     res: Response,
 ): Promise<void> {
     try {
-        const secret = getAuthSecret('refresh');
-        const payload = verifySignedToken(req.body.refreshToken, secret);
-
-        if (!payload || payload.type !== 'refresh') {
-            error(res, 'Invalid or expired refresh token', 401);
-            return;
-        }
-
+        const payload = req?.auth as AuthTokenPayload;
         const user = await UsersSchema.findById(payload.sub);
         if (!user || user.email !== payload.email || !user.verified) {
             error(res, 'Invalid refresh token user context', 401);
@@ -173,6 +166,7 @@ export async function refreshAccessToken(
 
         const { ACCESS_TOKEN_TTL_SECONDS } = config;
 
+        const secret = getAuthSecret('access');
         const accessToken = createSignedToken(
             {
                 sub: user.id,

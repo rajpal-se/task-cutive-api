@@ -31,10 +31,16 @@ export function requireAuth(options: AuthMiddlewareOptions = {}) {
                 return;
             }
 
-            const payload = verifySignedToken(token, getAuthSecret('access'));
+            const payload =
+                verifySignedToken(token, getAuthSecret('access')) ??
+                verifySignedToken(token, getAuthSecret('refresh'));
 
-            if (!payload || payload.type !== 'access') {
-                error(res, 'Invalid or expired access token', 401);
+            if (!payload || !(payload.type === 'access' || payload.type === 'refresh')) {
+                if (payload?.type === 'refresh') {
+                    error(res, 'Invalid or expired refresh token', 401);
+                } else {
+                    error(res, 'Invalid or expired access token', 401);
+                }
                 return;
             }
 

@@ -14,7 +14,7 @@ authRouter
     .post('/login', login)
     .post('/logout', requireAuth(), logout)
     .post('/reset-password', resetPassword)
-    .post('/verify-otp', verifyOTP)
-    .post('/refresh-access-token', refreshAccessToken);
+    .post('/verify-otp', requireAuth(), verifyOTP)
+    .post('/refresh-access-token', requireAuth(), refreshAccessToken);
 
 export default authRouter;

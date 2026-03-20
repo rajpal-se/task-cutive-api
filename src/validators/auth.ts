@@ -58,13 +58,3 @@ export const verifyOtpRequestSchema = yup
             .required(),
     })
     .required();
-
-export const refreshAccessTokenRequestSchema = yup
-    .object({
-        body: yup
-            .object({
-                refreshToken: yup.string().trim().required('Refresh token is required'),
-            })
-            .required(),
-    })
-    .required();

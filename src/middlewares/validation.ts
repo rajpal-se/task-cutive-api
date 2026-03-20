@@ -44,7 +44,6 @@ const authConfig = {
         [/\/auth\/login\/?$/, loginRequestSchema],
         [/\/auth\/reset-password\/?$/, resetPasswordRequestSchema],
         [/\/auth\/verify-otp\/?$/, verifyOtpRequestSchema],
-        [/\/auth\/refresh-access-token\/?$/, refreshAccessTokenRequestSchema],
     ],
 };
 
