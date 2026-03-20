@@ -64,7 +64,7 @@ export async function login(req: LoginUserRequest, res: Response): Promise<void>
 export async function logout(req: LogoutUserRequest, res: Response): Promise<void> {
     success(res, {
         data: {
-            refreshTokenDiscarded: Boolean(req.body?.refreshToken),
+            loggedOut: true,
         },
         message: 'Logout successful. Discard auth tokens on the client.',
     });
