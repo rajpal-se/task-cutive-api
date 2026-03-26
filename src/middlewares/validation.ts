@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import {
     loginRequestSchema,
-    refreshAccessTokenRequestSchema,
     resetPasswordRequestSchema,
     verifyOtpRequestSchema,
 } from '../validators/auth.js';
