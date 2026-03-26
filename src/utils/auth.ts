@@ -116,6 +116,7 @@ export function issueAuthTokens(user: InstanceType<typeof UsersSchema>) {
         sub: user.id,
         email: user.email,
         role: user.role,
+        isVerified: user.verified,
     };
 
     return {

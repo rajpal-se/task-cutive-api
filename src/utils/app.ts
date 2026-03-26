@@ -14,9 +14,10 @@ export function success<T = any>(res: Response, data: T, statusCode = 200) {
     });
 }
 
-export function error(res: Response, message: string, statusCode = 400) {
+export function error<T = any>(res: Response, message: string, statusCode = 400, data?: T) {
     return res.status(statusCode).json({
         success: false,
         message,
+        data,
     });
 }

@@ -40,9 +40,21 @@ export async function login(req: LoginUserRequest, res: Response): Promise<void>
         }
 
         if (!user.verified) {
-            await sendOtpEmail(user, 'verify-email');
-            error(res, 'Email not verified. A verification OTP has been sent to your email.', 403);
-            return;
+            try {
+                await sendOtpEmail(user, 'verify-email');
+                error(
+                    res,
+                    'Email not verified. A verification OTP has been sent to your email.',
+                    403,
+                    {
+                        ...issueAuthTokens(user),
+                    },
+                );
+                return;
+            } catch (e: any) {
+                error(res, `${e?.message}.` || 'Failed to login', 500);
+                return;
+            }
         }
 
         success(
