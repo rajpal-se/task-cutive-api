@@ -124,12 +124,25 @@ export async function createTask(req: CreateTaskRequest, res: Response): Promise
         const dueDate = Date.parse(dueDatetime as string);
         const parsedPriority = isHighPriority || false;
 
+        let createdAt = {};
+
+        if (process.env.NODE_ENV !== 'production') {
+            const rawCreatedAt = (req.body as any).createdAt;
+            if (rawCreatedAt) {
+                const parsedCreatedAt = new Date(rawCreatedAt);
+                if (!Number.isNaN(parsedCreatedAt.getTime())) {
+                    createdAt = { created_at: parsedCreatedAt, updated_at: parsedCreatedAt };
+                }
+            }
+        }
+
         const task = await TasksSchema.create({
             userId,
             title,
             description,
             is_high_priority: parsedPriority,
             due_datetime: dueDate ? new Date(dueDate) : undefined,
+            ...createdAt,
         });
 
         success(res, { data: task.toObject(), message: 'Task created successfully' }, 201);
