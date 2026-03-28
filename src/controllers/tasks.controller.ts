@@ -43,29 +43,37 @@ export async function getAllTasks(req: GetAllTasksRequest, res: Response): Promi
 
         const now = new Date();
         const query: Record<string, unknown> = { userId };
-        const sort: Record<string, 1 | -1> = { created_at: -1 };
+        const sort: Record<string, 1 | -1> = {};
 
         switch (filter) {
             case 'done':
                 query.is_completed = true;
+                sort.created_at = -1;
+                sort._id = -1;
                 break;
             case 'pending':
                 query.is_completed = false;
+                sort.created_at = -1;
+                sort._id = -1;
                 break;
             case 'expired':
                 query.is_completed = false;
                 query.due_datetime = { $lt: now };
                 sort.due_datetime = 1;
-                delete sort.created_at;
+                sort.created_at = -1;
+                sort._id = -1;
                 break;
             case 'upcoming':
                 query.is_completed = false;
                 query.due_datetime = { $gte: now };
                 sort.due_datetime = 1;
-                delete sort.created_at;
+                sort.created_at = -1;
+                sort._id = -1;
                 break;
             case 'recent':
             default:
+                sort.created_at = -1;
+                sort._id = -1;
                 break;
         }
 
@@ -75,7 +83,31 @@ export async function getAllTasks(req: GetAllTasksRequest, res: Response): Promi
             .skip((page - 1) * perPage)
             .limit(perPage);
 
-        const tasks = result?.map((v) => v?.getData());
+        // Legacy seed data may contain future created_at values.
+        // Keep recent ordering intuitive: past-created first (newest to oldest),
+        // then future-created (nearest future first).
+        const normalizedResult =
+            filter === 'recent' || !filter
+                ? result.sort((a, b) => {
+                      const nowMs = now.getTime();
+                      const aCreated = new Date(a.created_at as Date).getTime();
+                      const bCreated = new Date(b.created_at as Date).getTime();
+                      const aFuture = aCreated > nowMs;
+                      const bFuture = bCreated > nowMs;
+
+                      if (aFuture !== bFuture) {
+                          return aFuture ? 1 : -1;
+                      }
+
+                      if (aFuture && bFuture) {
+                          return aCreated - bCreated;
+                      }
+
+                      return bCreated - aCreated;
+                  })
+                : result;
+
+        const tasks = normalizedResult?.map((v) => v?.getData());
         const data = {
             tasks,
             pagination: {
@@ -131,7 +163,10 @@ export async function createTask(req: CreateTaskRequest, res: Response): Promise
             if (rawCreatedAt) {
                 const parsedCreatedAt = new Date(rawCreatedAt);
                 if (!Number.isNaN(parsedCreatedAt.getTime())) {
-                    createdAt = { created_at: parsedCreatedAt, updated_at: parsedCreatedAt };
+                    const now = new Date();
+                    const safeCreatedAt =
+                        parsedCreatedAt.getTime() > now.getTime() ? now : parsedCreatedAt;
+                    createdAt = { created_at: safeCreatedAt, updated_at: safeCreatedAt };
                 }
             }
         }
