@@ -39,3 +39,4 @@ docker-compose*.yml
 .env.gh
 .secrets
 .variables
+seed
